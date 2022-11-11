@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-// Obiekt pomocniczy służący do przechowywania wyników po redukcji macierzy.
+// Auxiliary object used to store the results after matrix reduction.
 class ReductionResult {
     ArrayList<ArrayList<Integer>> matrix;
     int rowMinValue;

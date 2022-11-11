@@ -1,7 +1,7 @@
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class Node {
+    // A class representing a vertex (node) object.
     ArrayList<ArrayList<Integer>> matrix = new ArrayList<>();
     Node prevNode = null;
     private int value;

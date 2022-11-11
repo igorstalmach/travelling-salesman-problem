@@ -2,12 +2,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class DeepCopy {
-    // Metoda służąca do głębokiego kopiowania (deep copy) obiektów ArrayList.
-    // W języku Java domyślnie dokonywana jest kopia jedynie referencji (shallow copy),
-    // przez co zmiana wartości w jednej powoduje zmianę wartości w drugiej.
+    // A method used to deep copy ArrayList objects.
+    // In Java, the default is to copy only references (shallow copy),
+    // i.e. a change in a value in one causes a change in the value of the other.
     public static ArrayList<ArrayList<Integer>> copyArray(ArrayList<ArrayList<Integer>> array) {
         ArrayList<ArrayList<Integer>> newArray = new ArrayList<>();
-        // Przeniesienie pojedynczo wartości z jednego obiektu do drugiego.
+        // Transfer values one at a time from one object to another.
         for (int i = 0; i < array.size(); i++) {
             ArrayList<Integer> tempArray = new ArrayList<>();
             for (int j = 0; j < array.get(i).size(); j++) {
@@ -20,7 +20,7 @@ public class DeepCopy {
 
     public static LinkedList<Integer> copyList(LinkedList<Integer> list) {
         LinkedList<Integer> newList = new LinkedList<>();
-        // Przeniesienie pojedynczo wartości z jednego obiektu do drugiego.
+        // Transfer values one at a time from one object to another.
         for (int i = 0; i < list.size(); i++) {
             newList.add(list.get(i));
         }
@@ -29,7 +29,7 @@ public class DeepCopy {
 
     public static ArrayList<Integer> copy1DArray(ArrayList<Integer> array) {
         ArrayList<Integer> newArray = new ArrayList<>();
-        // Przeniesienie pojedynczo wartości z jednego obiektu do drugiego.
+        // Transfer values one at a time from one object to another.
         for (int i = 0; i < array.size(); i++) {
             newArray.add(array.get(i));
         }

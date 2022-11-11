@@ -2,20 +2,20 @@ import java.util.Scanner;
 
 public class GUI {
 
-    // Zmienna przechowująca ścieżkę do pliku.
+    // Variable storing a path to the file.
     String file = "";
 
     public void gui() {
-        // Obsługa menu.
+        // Menu.
         System.out.println("""
-                [1] - przegląd zupełny (BF)
-                [2] - branch and bound (B & B)
-                [3] - wybierz plik z danymi
-                [4] - zakończ program
+                [1] - bruteforce
+                [2] - branch and bound
+                [3] - choose a file
+                [4] - terminate program
                 """);
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Wybierz wartość: ");
+        System.out.println("Choose a value: ");
         int value = Integer.parseInt(scanner.nextLine());
 
         if (value == 4) {
@@ -24,12 +24,12 @@ public class GUI {
         }
 
         if (value == 3) {
-            System.out.println("Podaj nazwę pliku wraz z rozszerzeniem: ");
+            System.out.println("Choose a filename (with extension): ");
             file = scanner.nextLine();
 
-            // Błąd, jeśli plik nie posiada rozszerzenia '.txt'.
+            // Error if the file does not have a '.txt' extension.
             if ((file.length() <= 4) || (!file.substring(file.length() - 4).equals(".txt"))) {
-                System.out.println("Error: Obsługiwane są wyłącznie pliki tekstowe");
+                System.out.println("Error: Only text files are supported.");
                 file = "";
                 System.exit(2);
             } else {
@@ -38,7 +38,7 @@ public class GUI {
         }
 
         if (file.isEmpty()) {
-            System.out.println("Error: Przed wybraniem algorytmu należy załączyć plik");
+            System.out.println("Error: Attach a file before choosing an algorithm.");
             System.exit(1);
         }
 
@@ -46,7 +46,7 @@ public class GUI {
             long start = System.currentTimeMillis();
             BruteForce.BF(file);
             long finish = System.currentTimeMillis();
-            System.out.println("Czas wykonywania: " + (finish - start) + " [ms]");
+            System.out.println("Execution time: " + (finish - start) + " [ms]");
             System.out.println();
         }
 
@@ -55,7 +55,7 @@ public class GUI {
             long start = System.currentTimeMillis();
             bnb.BaB(file);
             long finish = System.currentTimeMillis();
-            System.out.println("Czas wykonywania: " + (finish - start) + " [ms]");
+            System.out.println("Execution time: " + (finish - start) + " [ms]");
             System.out.println();
         }
 

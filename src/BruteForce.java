@@ -4,52 +4,52 @@ import org.apache.commons.collections4.iterators.PermutationIterator;
 
 public class BruteForce {
     public static void BF(String filePath) {
-        // Odczytywanie z pliku.
+        // Reading from a file.
         System.out.println("Info: Reading from file");
         ArrayList<ArrayList<Integer>> cities = ReadFromFile.readFile(filePath);
         int cityNumber = cities.get(0).get(0);
         cities.remove(0);
 
-        // Generowanie listy liczb do permutacji.
+        // Generate a list of numbers for permutation.
         System.out.println("Info: Started permutations");
         LinkedList<Integer> toPermute = new LinkedList<>();
         for (int i = 1; i < cityNumber; i++) {
             toPermute.add(i);
         }
 
-        // Generowanie wszystkich możliwych permutacji.
+        // Generate all possible permutations.
         PermutationIterator<Integer> permutations = new PermutationIterator<>(toPermute);
 
-        // Zmienne przechowujące ostateczną ścieżkę oraz jej długość.
+        // Variables storing the final path and its length.
         int length = 0;
         ArrayList<Integer> path = new ArrayList<>();
 
-        // Pętla główna programu.
+        // The main loop of the algorithm.
         System.out.println("Info: Started bruteforce");
         while (permutations.hasNext()) {
-            // Zmienne pomocnicze przechowujące obecną permutację, poprzednie miasto
-            // oraz tymczasową długość ścieżki obliczonej z daną permutacją.
+            // Variables storing current permutation, previous city
+            // and the temporary length of the path calculated with the given permutation.
             ArrayList<Integer> currPerm = (ArrayList<Integer>) permutations.next();
             int prev = 0;
             int tempLength = 0;
 
-            // Dodawanie kolejno odległości każdego z miast w danej permutacji.
+            // Adding the distance of each city in a given permutation sequentially.
             for (Integer currNum : currPerm) {
                 tempLength += cities.get(currNum).get(prev);
-                // Obecne miasto staje się poprzednim.
+                // The current city becomes the previous one.
                 prev = currNum;
             }
-            // Dodanie odległości powrotu do miasta początkowego.
+            // Adding a return distance to the starting city.
             tempLength += cities.get(0).get(prev);
 
-            // Zapisanie drogi oraz permutacji, gdy spełniony jest warunek.
+            // Updating path and permutation when the condition is met.
             if ((length == 0) || (length > tempLength)) {
                 length = tempLength;
                 path = currPerm;
             }
         }
 
-        // Wypisanie poprawnie sformatowanych wyników.
+        // Outputs correctly formatted results.
         for (int i = 0; i < path.size(); i++) {
             if (i == 0) {
                 System.out.print("0 -> " + path.get(i) + " -> ");

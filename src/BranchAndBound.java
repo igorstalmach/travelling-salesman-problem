@@ -2,7 +2,7 @@ import java.util.*;
 
 public class BranchAndBound {
 
-    // Metoda służąca do znalezienia wierzchołka o najmniejszej wartości.
+    // A method used to find a vertex with the smallest value.
     private Node findSmallestNode(LinkedList<Node> allNodes) {
         Node smallestNode = null;
         int minValue = Integer.MAX_VALUE;
@@ -16,7 +16,7 @@ public class BranchAndBound {
         return smallestNode;
     }
 
-    // Metoda służąca do znalezienia wszystkich wcześniejszych wierzchołków.
+    // A method used to find all previous vertices.
     private void getVisitedNodes(Node node, LinkedList<Node> visitedNodes) {
         while (node != null) {
             visitedNodes.add(node);
@@ -24,22 +24,22 @@ public class BranchAndBound {
         }
     }
 
-    // Metoda służąca do znalezienia ostatecznej ścieżki.
+    // A method used to find the final path.
     private void createPath(LinkedList<Node> visitedNodes, LinkedList<Integer> path) {
         for (Node node : visitedNodes) {
             path.add(node.getKey());
         }
     }
 
-    // Metoda główna algorytmu.
+    // Main method of the algorithm.
     public void BaB(String filePath) {
-        // Odczytywanie z pliku.
+        // Reading from a file.
         System.out.println("Info: Reading from file");
         ArrayList<ArrayList<Integer>> cities = ReadFromFile.readFile(filePath);
         int cityNumber = cities.get(0).get(0);
         cities.remove(0);
 
-        // Formatowanie i redukcja macierzy.
+        // Matrix formatting and reduction.
         cities = MatrixManipulation.createMatrix(cities);
         ReductionResult reductionResult = MatrixManipulation.reduceMatrix(cities);
         cities = reductionResult.matrix;
@@ -47,73 +47,73 @@ public class BranchAndBound {
         int currUpperBoundary = lowerBoundary;
         int upperBoundary = Integer.MAX_VALUE;
 
-        // Lista przechowująca numery wszystkich wierzchołków.
-        // LinkedList, ponieważ obiekt ten jest wydajniejszy przy dodawaniu i usuwaniu.
+        // A list storing numbers of all vertices.
+        // LinkedList, as this object is more efficient for additions and deletions.
         LinkedList<Integer> allNodeKeys = new LinkedList<>();
         for (int i = 1; i < cityNumber; i++) {
             allNodeKeys.add(i);
         }
 
-        // Inicjalizacja zmiennej obecnego rodzica, tymczasowego rodzica potrzebnego w pętli,
-        // wierzchołka o najmniejszej wartości oraz obecnej najkrótszej trasy
+        // Initialization of: the variable of the current parent, the temporary parent needed in the loop,
+        // the vertex with the smallest value and the current shortest route.
         Node parentNode = new Node(0, Integer.MAX_VALUE);
         Node tempParentNode = null;
         Node smallestNode = null;
         int currShortestPath = Integer.MAX_VALUE;
-        // Ostateczna ścieżka
+        // Final path
         LinkedList<Integer> path = new LinkedList<>();
         path.add(0);
-        // Dodanie wcześniej zredukowanej macierzy do rodzica wierzchołka.
+        // Adding a previously reduced matrix to a starting vertex.
         parentNode.addMatrix(cities);
-        // Utworzenie listy przechowującej wszystkie obliczone wierzchołki.
+        // Creating a list storing all calculated vertices.
         LinkedList<Node> allNodes = new LinkedList<>();
         allNodes.add(parentNode);
 
         System.out.println("Info: Started branch and bound");
-        // Pętla główna algorytmu.
+        // Main loop of the algorithm.
         while(!allNodeKeys.isEmpty()) {
-            // Sprawdzanie wszystkich dzieci wybranego rodzica.
+            // Checking all children of the selected parent.
             for (int childNode : allNodeKeys) {
                 ReductionResult tempReductionResult;
                 Node node = new Node(childNode, 0);
-                // Oblicza wartość wierzchołka wg wzoru G(prev, next) + y + y'
+                // Calculates the value of a vertex according to the formula G(prev, next) + y + y'
                 tempReductionResult = MatrixManipulation.reduceMatrix(MatrixManipulation.createNodeMatrix(parentNode.matrix, parentNode.getKey(), childNode));
                 tempReductionResult.addToTotal(parentNode.matrix.get(parentNode.getKey()).get(childNode));
                 tempReductionResult.addToTotal(currUpperBoundary);
-                // Dodanie nowej zredukowanej macierzy do obiektu wierzchołka.
+                // Adding a new reduced matrix to the vertex object.
                 node.addMatrix(tempReductionResult.matrix);
-                // Aktualizacja wartości wierzchołka.
+                // Update vertex value.
                 node.setValue(tempReductionResult.total);
-                // Aktualizacja rodzica wierzchołka.
+                // Updating the vertex's parent.
                 node.prevNode = parentNode;
-                // Dodanie wierzchołka do listy wszystkich obliczonych.
+                // Adding a vertex to the list of all calculated vertices.
                 allNodes.add(node);
-                // Jeśli wartość danego wierzchołka jest mniejsza, tzn. jest on hipotetycznym następnym wierzchołkiem,
-                // jest ona zapisywana wraz z całym wierzchołkiem.
+                // If the value of a given vertex is less than current, that is, it is a hypothetical next vertex,
+                // it is stored along with the entire vertex.
                 if(node.getValue() < currShortestPath) {
                     currShortestPath = node.getValue();
                     tempParentNode = node;
                 }
             }
-            // Ostateczna aktualizacja rodzica.
+            // Final parent update.
             parentNode = tempParentNode;
-            // Oznaczenie wierzchołka odwiedzonego.
+            // Marking vertex as visited.
             parentNode.setVisited(true);
 
-            // Jeśli wartość obecnie wybranego rodzica jest większa od górnej granicy,
-            // to nie ma sensu kontynuować tej drogi.
+            // If the value of the currently selected parent is greater than the upper limit,
+            // then there is no point in continuing down this path.
             if (parentNode.getValue() > upperBoundary) {
                 allNodeKeys.clear();
             }
 
-            // Usunięcie rodzica z listy wszystkich możliwych do następnego odwiedzenia wierzchołków.
+            // Removing the parent from the list of all possible vertices to be visited next.
             allNodeKeys.removeFirstOccurrence(parentNode.getKey());
             currUpperBoundary = currShortestPath;
             currShortestPath = Integer.MAX_VALUE;
 
-            // Warunek sprawdzający, czy algorytm należy zakończyć.
+            // A condition that checks whether the algorithm should be ended.
             if (allNodeKeys.size() == 0) {
-                // Podmiana górnej granicy wyłącznie, gdy jest mniejsza.
+                // Update the upper limit only if it's smaller.
                 if (currUpperBoundary < upperBoundary) {
                     upperBoundary = currUpperBoundary;
                     smallestNode = allNodes.getLast();
@@ -121,15 +121,15 @@ public class BranchAndBound {
                     currUpperBoundary = upperBoundary;
                 }
 
-                // Usunięcie wszystkich wierzchołków, których wartość jest większa od górnej granicy.
+                // Removal of all vertices whose value is greater than the upper limit.
                 for (int i = allNodes.size() - 1; i >= 0; i--) {
                     if (allNodes.get(i).getValue() > currUpperBoundary && allNodes.get(i).getValue() < Integer.MAX_VALUE) {
                         allNodes.remove(i);
                     }
                 }
 
-                // Sprawdzenie czy wszystkie pozostałe wierzchołki zostały odwiedzone,
-                // jeśli nie - pętla jest przerywana i program działa dalej
+                // Checking if all other vertices have been visited,
+                // if not - the loop is terminated and the program continues
                 boolean flag = true;
                 for (Node node : allNodes) {
                     if (!node.getVisited() && node.getKey() != 0) {
@@ -138,9 +138,9 @@ public class BranchAndBound {
                     }
                 }
 
-                // Jeśli wszystkie wierzchołki zostały odwiedzone, oznacza to, że ostatni wierzchołek
-                // w liście wszystkich wierzchołków jest ostateczny.
-                // Odnalezienie odwiedzonych wierzchołków oraz utworzenie drogi.
+                // If all vertices have been visited, it means that the last vertex
+                // is in the list of all vertices.
+                // Finding visited vertices and creating a path.
                 LinkedList<Node> visitedNodes = new LinkedList<>();
                 if (flag) {
                     getVisitedNodes(smallestNode, visitedNodes);
@@ -148,37 +148,37 @@ public class BranchAndBound {
                     break;
                 }
 
-                // Usunięcie wszystkich odwiedzonych wierzchołków.
+                // Removal of all visited vertices.
                 for (int i = allNodes.size() - 1; i >= 0; i--) {
                     if (allNodes.get(i).getVisited()) {
                         allNodes.remove(i);
                     }
                 }
 
-                // Odnalezienie najmniejszego nieodwiedzonego wierzchołka i odszukanie jego trasy.
+                // Finding the smallest unvisited vertex and tracing its path.
                 Node currSmallestNode = findSmallestNode(allNodes);
                 getVisitedNodes(currSmallestNode, visitedNodes);
 
-                // Ponowne utworzenie listy przechowującej wierzchołki do odwiedzenia.
+                // Re-create a list storing the vertices to be visited.
                 for (int i = 1; i < cityNumber; i++) {
                     allNodeKeys.add(i);
                 }
 
-                // Usunięcie z listy wierzchołków do odwiedzenia wierzchołków, które znajdują się w odkrytej już ścieżce.
+                // Removing from the list of vertices to visit the vertices that are in the already discovered path.
                 for (Node node : visitedNodes) {
                     if (allNodeKeys.contains(node.getKey())) {
                         allNodeKeys.removeFirstOccurrence(node.getKey());
                     }
                 }
 
-                // Aktualizacja rodzica oraz górnej granicy.
+                // Update parent and upper limit.
                 parentNode = currSmallestNode;
                 parentNode.setVisited(true);
                 currUpperBoundary = currSmallestNode.getValue();
             }
         }
 
-        // Wypisanie poprawnie sformatowanych wyników.
+        // Outputs correctly formatted results.
         for (int i = 0; i < path.size(); i++) {
             if (i == path.size() - 1) {
                 System.out.println(path.get(i));
