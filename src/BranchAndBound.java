@@ -3,31 +3,31 @@ import java.util.*;
 public class BranchAndBound {
 
     // A method used to find a vertex with the smallest value.
-    private Node findSmallestNode(LinkedList<Node> allNodes) {
-        Node smallestNode = null;
+    private Vertex findSmallestVertex(LinkedList<Vertex> allVertices) {
+        Vertex smallestVertex = null;
         int minValue = Integer.MAX_VALUE;
 
-        for (int i = allNodes.size() - 1; i >= 0; i--) {
-            if(allNodes.get(i).getValue() < minValue) {
-                minValue = allNodes.get(i).getValue();
-                smallestNode = allNodes.get(i);
+        for (int i = allVertices.size() - 1; i >= 0; i--) {
+            if(allVertices.get(i).getValue() < minValue) {
+                minValue = allVertices.get(i).getValue();
+                smallestVertex = allVertices.get(i);
             }
         }
-        return smallestNode;
+        return smallestVertex;
     }
 
     // A method used to find all previous vertices.
-    private void getVisitedNodes(Node node, LinkedList<Node> visitedNodes) {
-        while (node != null) {
-            visitedNodes.add(node);
-            node = node.prevNode;
+    private void getVisitedVertices(Vertex vertex, LinkedList<Vertex> visitedVertices) {
+        while (vertex != null) {
+            visitedVertices.add(vertex);
+            vertex = vertex.prevVertex;
         }
     }
 
     // A method used to find the final path.
-    private void createPath(LinkedList<Node> visitedNodes, LinkedList<Integer> path) {
-        for (Node node : visitedNodes) {
-            path.add(node.getKey());
+    private void createPath(LinkedList<Vertex> visitedVertices, LinkedList<Integer> path) {
+        for (Vertex vertex : visitedVertices) {
+            path.add(vertex.getKey());
         }
     }
 
@@ -56,18 +56,18 @@ public class BranchAndBound {
 
         // Initialization of: the variable of the current parent, the temporary parent needed in the loop,
         // the vertex with the smallest value and the current shortest route.
-        Node parentNode = new Node(0, Integer.MAX_VALUE);
-        Node tempParentNode = null;
-        Node smallestNode = null;
+        Vertex parentVertex = new Vertex(0, Integer.MAX_VALUE);
+        Vertex tempParentVertex = null;
+        Vertex smallestVertex = null;
         int currShortestPath = Integer.MAX_VALUE;
         // Final path
         LinkedList<Integer> path = new LinkedList<>();
         path.add(0);
         // Adding a previously reduced matrix to a starting vertex.
-        parentNode.addMatrix(cities);
+        parentVertex.setMatrix(cities);
         // Creating a list storing all calculated vertices.
-        LinkedList<Node> allNodes = new LinkedList<>();
-        allNodes.add(parentNode);
+        LinkedList<Vertex> allVertices = new LinkedList<>();
+        allVertices.add(parentVertex);
 
         System.out.println("Info: Started branch and bound");
         // Main loop of the algorithm.
@@ -75,39 +75,39 @@ public class BranchAndBound {
             // Checking all children of the selected parent.
             for (int childNode : allNodeKeys) {
                 ReductionResult tempReductionResult;
-                Node node = new Node(childNode, 0);
+                Vertex vertex = new Vertex(childNode, 0);
                 // Calculates the value of a vertex according to the formula G(prev, next) + y + y'
-                tempReductionResult = MatrixManipulation.reduceMatrix(MatrixManipulation.createNodeMatrix(parentNode.matrix, parentNode.getKey(), childNode));
-                tempReductionResult.addToTotal(parentNode.matrix.get(parentNode.getKey()).get(childNode));
+                tempReductionResult = MatrixManipulation.reduceMatrix(MatrixManipulation.createNodeMatrix(parentVertex.matrix, parentVertex.getKey(), childNode));
+                tempReductionResult.addToTotal(parentVertex.matrix.get(parentVertex.getKey()).get(childNode));
                 tempReductionResult.addToTotal(currUpperBoundary);
                 // Adding a new reduced matrix to the vertex object.
-                node.addMatrix(tempReductionResult.matrix);
+                vertex.setMatrix(tempReductionResult.matrix);
                 // Update vertex value.
-                node.setValue(tempReductionResult.total);
+                vertex.setValue(tempReductionResult.total);
                 // Updating the vertex's parent.
-                node.prevNode = parentNode;
+                vertex.prevVertex = parentVertex;
                 // Adding a vertex to the list of all calculated vertices.
-                allNodes.add(node);
+                allVertices.add(vertex);
                 // If the value of a given vertex is less than current, that is, it is a hypothetical next vertex,
                 // it is stored along with the entire vertex.
-                if(node.getValue() < currShortestPath) {
-                    currShortestPath = node.getValue();
-                    tempParentNode = node;
+                if(vertex.getValue() < currShortestPath) {
+                    currShortestPath = vertex.getValue();
+                    tempParentVertex = vertex;
                 }
             }
             // Final parent update.
-            parentNode = tempParentNode;
+            parentVertex = tempParentVertex;
             // Marking vertex as visited.
-            parentNode.setVisited(true);
+            parentVertex.setVisited(true);
 
             // If the value of the currently selected parent is greater than the upper limit,
             // then there is no point in continuing down this path.
-            if (parentNode.getValue() > upperBoundary) {
+            if (parentVertex.getValue() > upperBoundary) {
                 allNodeKeys.clear();
             }
 
             // Removing the parent from the list of all possible vertices to be visited next.
-            allNodeKeys.removeFirstOccurrence(parentNode.getKey());
+            allNodeKeys.removeFirstOccurrence(parentVertex.getKey());
             currUpperBoundary = currShortestPath;
             currShortestPath = Integer.MAX_VALUE;
 
@@ -116,23 +116,23 @@ public class BranchAndBound {
                 // Update the upper limit only if it's smaller.
                 if (currUpperBoundary < upperBoundary) {
                     upperBoundary = currUpperBoundary;
-                    smallestNode = allNodes.getLast();
+                    smallestVertex = allVertices.getLast();
                 } else {
                     currUpperBoundary = upperBoundary;
                 }
 
                 // Removal of all vertices whose value is greater than the upper limit.
-                for (int i = allNodes.size() - 1; i >= 0; i--) {
-                    if (allNodes.get(i).getValue() > currUpperBoundary && allNodes.get(i).getValue() < Integer.MAX_VALUE) {
-                        allNodes.remove(i);
+                for (int i = allVertices.size() - 1; i >= 0; i--) {
+                    if (allVertices.get(i).getValue() > currUpperBoundary && allVertices.get(i).getValue() < Integer.MAX_VALUE) {
+                        allVertices.remove(i);
                     }
                 }
 
                 // Checking if all other vertices have been visited,
                 // if not - the loop is terminated and the program continues
                 boolean flag = true;
-                for (Node node : allNodes) {
-                    if (!node.getVisited() && node.getKey() != 0) {
+                for (Vertex vertex : allVertices) {
+                    if (!vertex.getVisited() && vertex.getKey() != 0) {
                         flag = false;
                         break;
                     }
@@ -141,23 +141,23 @@ public class BranchAndBound {
                 // If all vertices have been visited, it means that the last vertex
                 // is in the list of all vertices.
                 // Finding visited vertices and creating a path.
-                LinkedList<Node> visitedNodes = new LinkedList<>();
+                LinkedList<Vertex> visitedVertices = new LinkedList<>();
                 if (flag) {
-                    getVisitedNodes(smallestNode, visitedNodes);
-                    createPath(visitedNodes, path);
+                    getVisitedVertices(smallestVertex, visitedVertices);
+                    createPath(visitedVertices, path);
                     break;
                 }
 
                 // Removal of all visited vertices.
-                for (int i = allNodes.size() - 1; i >= 0; i--) {
-                    if (allNodes.get(i).getVisited()) {
-                        allNodes.remove(i);
+                for (int i = allVertices.size() - 1; i >= 0; i--) {
+                    if (allVertices.get(i).getVisited()) {
+                        allVertices.remove(i);
                     }
                 }
 
                 // Finding the smallest unvisited vertex and tracing its path.
-                Node currSmallestNode = findSmallestNode(allNodes);
-                getVisitedNodes(currSmallestNode, visitedNodes);
+                Vertex currSmallestVertex = findSmallestVertex(allVertices);
+                getVisitedVertices(currSmallestVertex, visitedVertices);
 
                 // Re-create a list storing the vertices to be visited.
                 for (int i = 1; i < cityNumber; i++) {
@@ -165,16 +165,16 @@ public class BranchAndBound {
                 }
 
                 // Removing from the list of vertices to visit the vertices that are in the already discovered path.
-                for (Node node : visitedNodes) {
-                    if (allNodeKeys.contains(node.getKey())) {
-                        allNodeKeys.removeFirstOccurrence(node.getKey());
+                for (Vertex vertex : visitedVertices) {
+                    if (allNodeKeys.contains(vertex.getKey())) {
+                        allNodeKeys.removeFirstOccurrence(vertex.getKey());
                     }
                 }
 
                 // Update parent and upper limit.
-                parentNode = currSmallestNode;
-                parentNode.setVisited(true);
-                currUpperBoundary = currSmallestNode.getValue();
+                parentVertex = currSmallestVertex;
+                parentVertex.setVisited(true);
+                currUpperBoundary = currSmallestVertex.getValue();
             }
         }
 

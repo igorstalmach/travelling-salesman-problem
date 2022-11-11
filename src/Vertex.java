@@ -1,21 +1,17 @@
 import java.util.ArrayList;
 
-public class Node {
-    // A class representing a vertex (node) object.
+public class Vertex {
+    // A class representing a vertex object.
     ArrayList<ArrayList<Integer>> matrix = new ArrayList<>();
-    Node prevNode = null;
+    Vertex prevVertex = null;
     private int value;
-    private int key;
+    private final int key;
     private boolean isVisited;
 
-    Node(int key, int value) {
+    Vertex(int key, int value) {
         this.key = key;
         this.value = value;
         this.isVisited = false;
-    }
-
-    public void addToValue(int number) {
-        value += number;
     }
 
     public void setValue(int value) {
@@ -26,15 +22,11 @@ public class Node {
         return value;
     }
 
-    public void setKey(int key) {
-        this.key = key;
-    }
-
     public int getKey() {
         return key;
     }
 
-    public void addMatrix(ArrayList<ArrayList<Integer>> matrix) {
+    public void setMatrix(ArrayList<ArrayList<Integer>> matrix) {
         this.matrix = DeepCopy.copyArray(matrix);
     }
 
