@@ -19,9 +19,9 @@
 1 1 0 1 \
 1 1 1 0
 
-##### Output
+### Output
 - Path
 - Path length
 
-##### Dependencies
+### Dependencies
 - Apache Commons Collections 4.4 (for exact algorithms)
