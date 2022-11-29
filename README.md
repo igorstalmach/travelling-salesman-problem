@@ -22,6 +22,7 @@
 ### Output
 - Path
 - Path length
+- Execution time
 
 ### Dependencies
 - Apache Commons Collections 4.4 (for exact algorithms)
