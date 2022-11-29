@@ -68,8 +68,3 @@ cmake-build-*/
 out/
 
 *.iml
-
-### Additional ###
-
-META-INF
-testcases
