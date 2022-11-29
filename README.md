@@ -8,7 +8,7 @@
   - Bruteforce
 - Probabilistic algorithms
   - Simulated Annealing
-    - with customizable parameters: starting temperature, final temperature, temperature reduction coefficient, stop condition (in seconds).
+    - with customizable parameters: starting temperature, final temperature, temperature reduction coefficient, stop condition (in seconds)
 
 ### Input
 - File with a number of cities and a matrix of distances.
