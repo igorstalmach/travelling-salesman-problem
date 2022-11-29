@@ -1,12 +1,16 @@
 # Travelling Salesman Problem
 
-### Solution created for Efficient Algorithms Programming college class.
+## Solution created for Efficient Algorithms Programming college class.
 
-##### Algorithms implemented
-- Branch and Bound (Least cost)
-- Bruteforce
+### Algorithms implemented
+- Exact algorithms
+  - Branch and Bound (Least cost)
+  - Bruteforce
+- Probabilistic algorithms
+  - Simulated Annealing
+    - with customizable parameters: starting temperature, final temperature, temperature reduction coefficient, stop condition (in seconds).
 
-##### Input
+### Input
 - File with a number of cities and a matrix of distances.
 \
 4 \
@@ -16,8 +20,8 @@
 1 1 1 0
 
 ##### Output
-- Shortest distance
 - Path
+- Path length
 
 ##### Dependencies
-- Apache Commons Collections 4.4
+- Apache Commons Collections 4.4 (for exact algorithms)
