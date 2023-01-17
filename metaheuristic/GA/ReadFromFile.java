@@ -29,7 +29,7 @@ public class ReadFromFile {
 
         // Error handling.
         } catch (FileNotFoundException e) {
-            System.out.println("[Błąd] Nie znaleziono pliku.");
+            System.out.println("[Error] File not found.");
         }
 
         return cities;

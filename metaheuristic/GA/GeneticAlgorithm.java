@@ -175,9 +175,9 @@ public class GeneticAlgorithm {
         bestPath.add(0, 0);
 
         if (printPath) {
-            System.out.println("Najkrótsza ścieżka: " + bestPath);
+            System.out.println("Shortest path: " + bestPath);
         }
 
-        System.out.println("Najkrótsza długość ścieżki: " + bestChromosome.getPathDist());
+        System.out.println("Shortest path length: " + bestChromosome.getPathDist());
     }
 }
