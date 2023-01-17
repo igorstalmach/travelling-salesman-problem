@@ -1,6 +1,6 @@
 # Travelling Salesman Problem
 
-## Solution created for Efficient Algorithms Programming college class.
+## Solution created for Efficient Algorithms Design college class.
 
 ### Algorithms implemented
 - Exact algorithms
