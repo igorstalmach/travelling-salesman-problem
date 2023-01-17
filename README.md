@@ -5,10 +5,13 @@
 ### Algorithms implemented
 - Exact algorithms
   - Branch and Bound (Least cost)
-  - Bruteforce
-- Probabilistic algorithms
+  - Brute Force
+- Approximation algorithm
   - Simulated Annealing
-    - with customizable parameters: starting temperature, final temperature, temperature reduction coefficient, stop condition (in seconds)
+    - parameters: starting and final temperature, temperature reduction coefficient, stop condition (in seconds)
+- Metaheuristic algorithm:
+  - Genetic algorithm
+    - parameters: population size, crossover and mutation coefficient, crossover method (one point and two point), mutation method (one pair or two pair swap)
 
 ### Input
 - File with a number of cities and a matrix of distances.
