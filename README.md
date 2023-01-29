@@ -6,10 +6,9 @@
 - Exact algorithms
   - Branch and Bound (Least cost)
   - Brute Force
-- Approximation algorithm
+- Metaheuristic algorithms:
   - Simulated Annealing
     - parameters: starting and final temperature, temperature reduction coefficient, stop condition (time in seconds)
-- Metaheuristic algorithm:
   - Genetic algorithm
     - parameters: population size, crossover and mutation coefficient, crossover method (one point or two point), mutation method (one pair or two pair swap), stop condition (time in seconds)
 
@@ -28,4 +27,4 @@
 - Execution time
 
 ### Dependencies
-- Apache Commons Collections 4.4 (for exact algorithms)
+- Apache Commons Collections 4.4 (for brute force)
